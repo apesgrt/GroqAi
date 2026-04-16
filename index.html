@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Groq AI Chat</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Groq AI Chat</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="container">
-  <div class="header">⚡ Groq AI Chat</div>
+<div class="app">
+
+  <div class="topbar">
+    ⚡ Groq AI Assistant
+  </div>
 
   <div id="chat" class="chat"></div>
 
-  <div class="input-box">
+  <div class="inputbar">
     <input id="input" placeholder="Tulis pesan..." />
-    <button onclick="send()">Kirim</button>
+    <button onclick="send()">➤</button>
   </div>
+
 </div>
 
 <script>
@@ -27,7 +32,7 @@ async function send() {
   addMessage("user", text);
   input.value = "";
 
-  addMessage("ai", "⏳ mengetik...");
+  addTyping();
 
   const res = await fetch("/api/chat", {
     method: "POST",
@@ -37,19 +42,36 @@ async function send() {
 
   const data = await res.json();
 
-  // hapus loading terakhir
-  document.querySelector(".ai:last-child").remove();
-
-  addMessage("ai", data.result || "error");
+  removeTyping();
+  addMessage("ai", data.result);
 }
 
 function addMessage(role, text) {
   const chat = document.getElementById("chat");
-  const div = document.createElement("div");
-  div.className = role;
-  div.innerText = text;
-  chat.appendChild(div);
+
+  const msg = document.createElement("div");
+  msg.className = "msg " + role;
+
+  msg.innerHTML = `
+    <div class="bubble">${text}</div>
+  `;
+
+  chat.appendChild(msg);
   chat.scrollTop = chat.scrollHeight;
+}
+
+function addTyping() {
+  const chat = document.getElementById("chat");
+  const typing = document.createElement("div");
+  typing.className = "msg ai typing";
+  typing.id = "typing";
+  typing.innerHTML = `<div class="bubble">AI sedang mengetik...</div>`;
+  chat.appendChild(typing);
+}
+
+function removeTyping() {
+  const t = document.getElementById("typing");
+  if (t) t.remove();
 }
 </script>
 
