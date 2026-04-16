@@ -1,68 +1,121 @@
 body {
   margin: 0;
   font-family: Arial;
-  background: #0f172a;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
   color: white;
 }
 
-.container {
-  max-width: 600px;
-  margin: auto;
+/* APP CONTAINER */
+.app {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  max-width: 100%;
 }
 
-.header {
-  padding: 15px;
+/* TOP BAR */
+.topbar {
+  padding: 14px;
   text-align: center;
-  font-size: 20px;
-  background: #111827;
   font-weight: bold;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(10px);
+  font-size: 16px;
 }
 
+/* CHAT AREA */
 .chat {
   flex: 1;
   padding: 10px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.user {
+/* MESSAGE WRAPPER */
+.msg {
+  display: flex;
+  width: 100%;
+}
+
+/* ALIGN */
+.msg.user {
+  justify-content: flex-end;
+}
+
+.msg.ai {
+  justify-content: flex-start;
+}
+
+/* BUBBLE */
+.bubble {
+  max-width: 80%;
+  padding: 10px 12px;
+  border-radius: 14px;
+  line-height: 1.4;
+  font-size: 14px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+/* USER */
+.user .bubble {
   background: #2563eb;
-  padding: 10px;
-  margin: 5px;
-  border-radius: 10px;
-  text-align: right;
+  border-bottom-right-radius: 4px;
 }
 
-.ai {
+/* AI */
+.ai .bubble {
   background: #1f2937;
-  padding: 10px;
-  margin: 5px;
-  border-radius: 10px;
-  text-align: left;
+  border-bottom-left-radius: 4px;
 }
 
-.input-box {
+/* INPUT AREA */
+.inputbar {
   display: flex;
   padding: 10px;
-  background: #111827;
+  gap: 8px;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(10px);
+
+  /* FIX MOBILE SAFE AREA */
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
 }
 
 input {
   flex: 1;
-  padding: 10px;
+  padding: 12px;
+  border-radius: 10px;
   border: none;
-  border-radius: 8px;
   outline: none;
+  font-size: 14px;
 }
 
 button {
-  margin-left: 10px;
-  padding: 10px 15px;
+  padding: 12px 14px;
   border: none;
+  border-radius: 10px;
   background: #22c55e;
   color: white;
-  border-radius: 8px;
-  cursor: pointer;
+  font-size: 14px;
+}
+
+/* SCROLL BAR HIDE (mobile clean) */
+.chat::-webkit-scrollbar {
+  display: none;
+}
+
+/* RESPONSIVE TWEAK */
+@media (min-width: 768px) {
+  .app {
+    max-width: 600px;
+    margin: auto;
+    border-left: 1px solid rgba(255,255,255,0.1);
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .bubble {
+    font-size: 15px;
+  }
 }
