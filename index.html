@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Groq AI Chat</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -11,7 +12,7 @@
 <div class="app">
 
   <div class="topbar">
-    ⚡ Groq AI Assistant
+    ⚡ Groq AI Chat
   </div>
 
   <div id="chat" class="chat"></div>
@@ -29,49 +30,35 @@ async function send() {
   const text = input.value;
   if (!text) return;
 
-  addMessage("user", text);
+  addMsg("user", text);
   input.value = "";
 
-  addTyping();
+  addMsg("ai", "⏳ mengetik...");
 
   const res = await fetch("/api/chat", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {"Content-Type":"application/json"},
     body: JSON.stringify({ prompt: text })
   });
 
   const data = await res.json();
 
-  removeTyping();
-  addMessage("ai", data.result);
+  document.querySelector(".typing")?.remove();
+  addMsg("ai", data.result || "error");
 }
 
-function addMessage(role, text) {
+function addMsg(role, text) {
   const chat = document.getElementById("chat");
 
-  const msg = document.createElement("div");
-  msg.className = "msg " + role;
+  const div = document.createElement("div");
+  div.className = "msg " + role;
 
-  msg.innerHTML = `
-    <div class="bubble">${text}</div>
-  `;
+  if (text === "⏳ mengetik...") div.classList.add("typing");
 
-  chat.appendChild(msg);
+  div.innerHTML = `<div class="bubble">${text}</div>`;
+
+  chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
-}
-
-function addTyping() {
-  const chat = document.getElementById("chat");
-  const typing = document.createElement("div");
-  typing.className = "msg ai typing";
-  typing.id = "typing";
-  typing.innerHTML = `<div class="bubble">AI sedang mengetik...</div>`;
-  chat.appendChild(typing);
-}
-
-function removeTyping() {
-  const t = document.getElementById("typing");
-  if (t) t.remove();
 }
 </script>
 
